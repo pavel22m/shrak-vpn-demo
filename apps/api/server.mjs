@@ -108,10 +108,25 @@ async function handleApi(request, response, url) {
   }
 }
 
+async function callTelegram(method, payload) {
+  if (!BOT_TOKEN) throw new Error('BOT_TOKEN не настроен на сервере');
+  const telegramResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${method}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const result = await telegramResponse.json().catch(() => ({}));
+  if (!telegramResponse.ok || !result.ok) {
+    console.error(`Telegram ${method} failed`, result);
+    throw new Error(result.description || `Telegram API error: ${telegramResponse.status}`);
+  }
+  return result;
+}
+
 async function handleTelegramWebhook(request, response) {
   const body = await readBody(request);
   const message = body?.message;
-  if (!message?.from?.id) return sendJson(response, 200, { ok: true });
+  if (!message?.chat?.id) return sendJson(response, 200, { ok: true });
   const miniAppUrl = `${PUBLIC_APP_URL}/`;
   const text = [
     '🛡️ Шрак VPN',
@@ -123,16 +138,18 @@ async function handleTelegramWebhook(request, response) {
     '',
     'Нажмите кнопку ниже, чтобы открыть приложение.',
   ].join('\n');
-  const result = {
-    method: 'sendMessage',
-    chat_id: message.chat.id,
-    text,
-    reply_markup: {
-      inline_keyboard: [[{ text: 'Открыть Шрак VPN', web_app: { url: miniAppUrl } }]],
-    },
-  };
-  response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-  response.end(JSON.stringify(result));
+  try {
+    await callTelegram('sendMessage', {
+      chat_id: message.chat.id,
+      text,
+      reply_markup: {
+        inline_keyboard: [[{ text: 'Открыть Шрак VPN', web_app: { url: miniAppUrl } }]],
+      },
+    });
+  } catch (error) {
+    console.error('Webhook reply failed', error);
+  }
+  return sendJson(response, 200, { ok: true });
 }
 
 async function serveFile(request, response, url) {
