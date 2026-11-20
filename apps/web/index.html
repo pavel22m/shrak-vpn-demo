@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#090b17" />
+    <meta name="description" content="Шрак VPN — быстрый демо-кабинет подписки" />
+    <link rel="icon" href="/branding/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Шрак VPN · личный кабинет</title>
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div id="app" class="shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <img class="brand-mark" src="/branding/avatar.svg" alt="" />
+          <div>
+            <p class="eyebrow">PRIVATE NETWORK</p>
+            <h1>Шрак <span>VPN</span></h1>
+          </div>
+        </div>
+        <button id="profileButton" class="icon-button" aria-label="Открыть профиль">◉</button>
+      </header>
+
+      <main>
+        <section class="hero card card-glow">
+          <div class="hero-copy">
+            <p class="eyebrow accent">ДЕМО-РЕЖИМ · БЕЗ РЕАЛЬНЫХ СПИСАНИЙ</p>
+            <h2>Твой интернет.<br /><em>Твои правила.</em></h2>
+            <p class="muted">Открой защищённый доступ за пару касаний.</p>
+          </div>
+          <div class="status-orb"><span></span><small>SAFE</small></div>
+        </section>
+
+        <section class="overview-grid">
+          <article class="metric-card card">
+            <div class="metric-label"><span class="dot cyan"></span> Баланс</div>
+            <strong id="balance">0 ₽</strong>
+            <button class="link-button" data-action="topup">＋ Пополнить демо</button>
+          </article>
+          <article class="metric-card card subscription-card">
+            <div class="metric-label"><span class="dot violet"></span> Подписка</div>
+            <strong id="subscriptionStatus">Не активна</strong>
+            <span id="subscriptionDate" class="muted small">Выберите тариф ниже</span>
+          </article>
+        </section>
+
+        <section class="section-heading">
+          <div>
+            <p class="eyebrow accent">ДОСТУП</p>
+            <h3>Выбери свой тариф</h3>
+          </div>
+          <span class="demo-pill">DEMO</span>
+        </section>
+        <section id="plans" class="plans-grid"></section>
+
+        <section id="configSection" class="config-card card hidden">
+          <div class="config-header">
+            <div class="config-icon">⌁</div>
+            <div>
+              <p class="eyebrow accent">ГОТОВО К ТЕСТУ</p>
+              <h3>Твоя конфигурация</h3>
+            </div>
+            <span class="live-dot">ACTIVE</span>
+          </div>
+          <p class="muted">Это демонстрационная конфигурация. Реальный сервер подключается отдельно.</p>
+          <div class="config-code" id="configValue">demo://wireguard/shrak-vpn-example</div>
+          <button class="primary-button" data-action="copy-config">Скопировать конфигурацию</button>
+        </section>
+
+        <section class="section-heading support-heading">
+          <div>
+            <p class="eyebrow accent">НА СВЯЗИ</p>
+            <h3>Нужна помощь?</h3>
+          </div>
+        </section>
+        <section class="support-card card">
+          <div class="support-avatar">✦</div>
+          <div class="support-copy">
+            <strong>Команда Шрак VPN</strong>
+            <span class="muted">Ответим на вопросы по подписке</span>
+          </div>
+          <button class="round-button" data-action="support" aria-label="Написать в поддержку">→</button>
+        </section>
+
+        <section id="adminSection" class="admin-section hidden">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow accent">OWNER ONLY</p>
+              <h3>Панель владельца</h3>
+            </div>
+            <button class="ghost-button" data-action="refresh-admin">Обновить</button>
+          </div>
+          <div id="adminStats" class="admin-stats"></div>
+          <div class="admin-tools card">
+            <div class="admin-tool-title"><span class="eyebrow accent">УПРАВЛЕНИЕ</span><strong>Демо-операции</strong></div>
+            <div class="admin-form-row">
+              <input id="adminUserId" class="field" placeholder="Telegram ID пользователя" inputmode="numeric" />
+              <input id="adminAmount" class="field" placeholder="Сумма ₽" inputmode="numeric" value="1000" />
+              <button class="primary-button compact" data-action="admin-topup">Пополнить</button>
+            </div>
+            <div class="admin-form-row">
+              <select id="adminPlan" class="field"></select>
+              <button class="secondary-button compact" data-action="admin-grant">Выдать подписку</button>
+              <button class="danger-button compact" data-action="admin-revoke">Отозвать</button>
+            </div>
+          </div>
+          <div class="admin-table-wrap card"><div id="adminUsers"></div></div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Навигация">
+        <button class="nav-item active" data-scroll="top"><span>⌂</span><small>Главная</small></button>
+        <button class="nav-item" data-scroll="plans"><span>◇</span><small>Тарифы</small></button>
+        <button class="nav-item" data-action="history"><span>↺</span><small>История</small></button>
+        <button class="nav-item" data-action="support"><span>?</span><small>Поддержка</small></button>
+      </nav>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+    <dialog id="modal" class="modal">
+      <div id="modalContent"></div>
+      <button class="modal-close" data-action="close-modal" aria-label="Закрыть">×</button>
+    </dialog>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
